@@ -1,0 +1,46 @@
+SIMPLE QUERIES: 
+1) Finding the amount due which is greater than 70 in the payment_details collection:
+
+mydb.payment_details.find({ amount_due: { $gt: 70 } });
+
+     
+
+
+COMPLEX QUERIES:
+
+2) Retrieving the lab tests collections where the description has the key work “kidney” in it.
+
+mydb.lab_tests.find({ Description: { $regex: /kidney/i } });
+
+
+  
+3) Finding the lab test records which has the test date greater than a particular date.
+mydb.lab_tests.find({ Test_date: { $gt: ISODate("2023-02-05T00:00:00.000Z") } })
+
+ 
+AGGREGATE QUERIES:
+
+ 
+4) Using aggregate functions to group and find the count of the working days of the doctors.
+mydb.doctors.aggregate([
+{
+"$group": {
+"_id": "$working_days", "count": { "$sum": 1 }
+	}
+}, 
+ {"$sort": {"count":-1}}
+])
+
+ 
+5) Finding the total amount due in the paymen_details collection by grouping aggregate function
+mydb.payment_details.aggregate([
+{ $group: { _id: null, totalAmount: { $sum: "$amount_due" } } }
+]);
+
+
+6) Using aggregate function match and finding the records that have ‘Cardiology’ as the specialization.
+mydb.doctors.aggregate([
+{
+"$match": { "specialization": "Cardiology" }
+}
+])
